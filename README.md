@@ -1,5 +1,4 @@
-# docker_for_workable
-take home exercise by Angelos Karageorgiou angelos@unix.gr
+# some docker tools 
 
 # Operation
 
