@@ -1,4 +1,4 @@
-# some docker tools 
+# some docker tools  that I forgot why I built and what they are supposed to do. (The bash script is cool)
 
 # Operation
 
