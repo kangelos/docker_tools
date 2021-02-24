@@ -1,14 +1,27 @@
-FROM centos:centos6
-EXPOSE 80
+# original idea  from https://hub.docker.com/r/testnet/litecoin/dockerfile
+# since I have no clue what litecoin is supposed to do
 
-RUN yum -y update && \
-	yum -y install epel-release 
+FROM ubuntu:20.04
 
-RUN yum -y install mod_php
+# litecoin deps
+RUN apt-get update && apt-get install -y \
+    curl tar  vim  sudo
 
-COPY index.php /var/www/html/index.php
+# create a non-root user
+RUN adduser --disabled-login --gecos "" lite --shell /bin/bash
 
-COPY dockerstart.bash /root/start.sh
-#ENTRYPOINT /root/start.sh
+# litecoin
+WORKDIR /home/lite
+RUN curl -s  https://download.litecoin.org/litecoin-0.18.1/linux/litecoin-0.18.1-x86_64-linux-gnu.tar.gz \
+    -o litecoin-0.18.1-x86_64-linux-gnu.tar.gz && \
+  tar  xzvf litecoin-0.18.1-x86_64-linux-gnu.tar.gz 
 
-ENTRYPOINT ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+# make lite user own the litecoin-testnet-box
+RUN chown -R lite:lite /home/lite
+
+# use the lite user when running the image
+USER lite
+
+# expose two daemon port
+EXPOSE 9332 9333
+ENTRYPOINT ["/home/lite/litecoin-0.18.1/bin/litecoind"]
